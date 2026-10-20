@@ -2,7 +2,7 @@
 
 A restoration plan for the Heathkit SB-102 HF SSB/CW transceiver (1970–1975) and its HP-23 power supply. It covers which parts fail with age, the solid-state LMO and its power supply, a phased restoration procedure, alignment and neutralization, a symptom-to-service-bulletin index, and maintenance.
 
-**Status:** Rev. 1 is built from Heath service bulletins and field sources (W5RKL, K5BCQ, Nostalgic Kits Central, W2PA, the Heath list). The cross-check against the original Heath manual is pending.
+**Status:** Rev. 2, checked against the original Heath SB-102 assembly manual (595-1058-06): specifications, tube and diode complement, LMO power supply, initial test, alignment and troubleshooting chart. Field sources (W5RKL, K5BCQ, Nostalgic Kits Central, W2PA, the Heath list) are kept where the manual does not contradict them.
 
 ## Files
 
