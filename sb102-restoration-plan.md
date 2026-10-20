@@ -24,7 +24,8 @@ toc: true
 | Nostalgic Kits Central SB-10x troubleshooting | nostalgickitscentral.com | Measured SB-102 resistor drift and electrolytic leakage. |
 | W2PA SB-101 rebuild notes | sites.google.com/site/radiow2pa | LMO connector, bandswitch rotors, driver neutralizing. |
 | Heath list / Heathkit-Radios / heathkit (groups.io) | puck.nether.net, groups.io | Field experience. |
-| **PS-23 AC Power Supply manual** 595-2314 (©1979) | Supplied by owner | Supply section checked against it (Rev. 2.1). |
+| **HP-23A AC Power Supply assembly manual** 595-924-01 (©1968) | Supplied by owner | HP-23A section checked against it (Rev. 2.2, §3.6.1). |
+| **PS-23 AC Power Supply manual** 595-2314 (©1979) | Supplied by owner | Supply section checked against it (Rev. 2.1, §3.6.2). |
 
 **Designator groups (p. 135):**
 
@@ -130,10 +131,10 @@ The spec list totals **19 tubes**; the introduction (p. 2) says "twenty tubes, f
 
 - **Lamps (parts list p. 24):** one **#47** and three **#1815** (one #1815 is PL1 in the LMO supply). They are part of a series-parallel filament arrangement; wrong lamps unbalance it (chart 4B). Panel lamps should light with equal brilliance (p. 100).
 - **Supply (pp. 98–99):** HP-23/23A (117 VAC) or HP-13/13A (12 VDC).
-  - The HP-23A must be on its **+300 V** connection.
-  - **With the HP-23A, the supply's BIAS control is inoperative; bias is set by the transceiver's BIAS ADJUST.**
+  - The HP-23A must be on its **+300 V** connection: AC OFF switch **right (350 VDC no-load)** (§3.6.1).
+  - **With the HP-23A, the supply's BIAS control is inoperative; bias is set by the transceiver's BIAS ADJUST.** The rig uses the HP-23A's fixed −130 V on pin 1; the BIAS control only feeds pin 11 (§3.6.1).
   - With the HP-13A, set the supply's bias control fully clockwise.
-- **11-pin plug:**
+- **11-pin plug** (SB-102 / transceiver end; the HP-23A's supply-end socket differs, §3.6.1):
 
 | Pin | Function |
 |---|---|
@@ -248,14 +249,108 @@ Do not open the LMO casually. If it is defective, the manual says to return it (
 
 - Recap the high-voltage section (C1–C4 → 150 µF 500 V).
 - Recap C5 (40 µF B+). An open C5 causes a CW tone and relay chatter (SB-102-29 symptom).
-- Recap the bias caps C6/C7.
+- Recap the bias caps C6/C7 (**20 µF in the HP-23A**, 40 µF in the PS-23).
 - Replace the bleeders (100 kΩ 2 W) and diodes (1N4007).
 - Fit a grounded cord.
-- **+300 V B+ connection.**
+- **+300 V B+ connection** (HP-23A switch right; PS-23 350 VDC wiring).
 - Must meet the spec: **700–850 V @ 250 mA, 300 V @ 150 mA, −115 V @ 10 mA, 12 V @ 4.76 A**.
 - Reform or ramp on a variac over 5–10 min.
 
-### 3.6.1 PS-23 supply (checked against the PS-23 manual, 595-2314, ©1979)
+### 3.6.1 HP-23A supply (checked against the HP-23A manual, 595-924-01, ©1968)
+
+Page numbers are the HP-23A manual's printed pages.
+
+**How the HP-23A works:**
+
+- **The front-panel AC OFF switch is also the B+ selector** (DPDT, 61-12). **Right = 350 VDC** (high tap), **left = 275 VDC** (low tap), **center = OFF** (p. 14). Plate and filament voltages switch together.
+  - The field "300/OFF/250" labels are the **loaded** values of the same two taps.
+  - With remote switching wired (pins 9–10 to the equipment's switch), the panel switch still selects B+, and the equipment's switch turns the supply on and off.
+  - The switch is easy to bump into OFF, or through it to the other tap.
+- **Two bias outputs** (pp. 13, 16, 17):
+  - **fixed −130 V** (−100 V at 20 mA) on **pin 1**;
+  - **adjustable −40 to −80 V** (1 mA max) on **pin 11**, set by BIAS ADJUST R9.
+  
+  When the cable is made up, its green wire goes to pin 1 *or* pin 11 (p. 12). These transceivers take the **fixed −130 V on pin 1** and set final bias with their own BIAS control. **That is why the rig manuals call the HP-23A's BIAS control inoperative: R9 only feeds pin 11.**
+- **Filaments:** 12.6 VAC @ 5.5 A on **pin 6**, or 6.3 VAC @ 11 A on pin 8. The cable's red wire goes to one or the other (p. 12). These rigs use **pin 6 (12.6 V)**.
+- **Primary protection is a circuit breaker** (65-17; the manual doesn't give its rating), not a fuse. Line: 120/240 VAC, 50/60 Hz, 350 W max (p. 16).
+- The line cord (89-19) is listed without a conductor count. **[field]** Fit an 18/3 grounded cord.
+- The HP-23A manual doesn't name specific transceivers. It says connection instructions come with the Heath equipment (p. 13).
+
+**SB-102: switch RIGHT (350 VDC).** The SB-102 needs **300 V @ 150 mA** (spec), which is the HP-23A's high tap under load. Its initial test expects 800–900 V on HV (p. 100), matching the HP-23A's 820 V no-load figure. Make up the cable per **Fig. 1-5 (p. 99)**, with **green on pin 1** (fixed −130 V) and **red on pin 6** (12.6 V). The SB-102's own plug table (§2.5) is the **transceiver end**; pins 5, 8 and 11 differ from the HP-23A's supply-end socket below.
+
+**Specifications (p. 16):**
+
+| Output | No load | Loaded | Ripple / duty |
+|----------------------|----------|----------------------------------|------------------------------------|
+| HV (pin 4) | 820 V | 700 V @ 250 mA (62.5 µF effective) | < 1% @ 250 mA; continuous to 150 mA, 50% @ 300 mA |
+| LV high tap, switch **right** (pin 3) | 350 V | 300 V @ 150 mA (with 100 mA on HV) | < 0.05%; continuous to 175 mA |
+| LV low tap, switch **left** (pin 3) | 275 V | 250 V @ 100 mA (with 100 mA on HV) | < 0.05%; continuous to 175 mA |
+| Fixed bias (pin 1) | −130 V | −100 V @ 20 mA | — |
+| Adjustable bias (pin 11) | −40 to −80 V | 1 mA max | — |
+| Filament (pin 6 / pin 8) | — | 12.6 VAC @ 5.5 A / 6.3 VAC @ 11 A | — |
+
+**Supply-end socket pinout (schematic; cable wiring p. 12; Table 1 p. 13):**
+
+| Pin | Cable wire | Function |
+|----|-----------|--------------------------------------------------------------|
+| 1 | Green (fixed option) | −130 V fixed bias |
+| 2 | Black | Filament common |
+| 3 | Orange | LV +350 V or +275 V (no load), per the switch |
+| 4 | Yellow | HV +820 V (no load) |
+| 5 | — | No connection |
+| 6 | Red (12 V option) | 12.6 VAC filament |
+| 7 | White | Ground |
+| 8 | Red (6 V option) | 6.3 VAC filament |
+| 9, 10 | Brown, blue | AC switch loop in the equipment. If the equipment can't switch AC, **jumper pins 9–10 at the plug** and leave brown and blue unconnected (p. 12). |
+| 11 | Green (adjustable option) | −40 to −80 V adjustable bias |
+
+**Recap list, with the HP-23A manual's values (parts list p. 3; price list p. 19; schematic; circuit description p. 17):**
+
+| Ref | Manual value (Heath p/n) | Function | Notes |
+|------------|----------------------|------------------------------|----------------------------------------|
+| C1, C2 | 125 µF tab-mount (25-34) | HV full-wave voltage doubler, from about 282 VAC | Replace together. The voltage rating isn't in the parts list; **[field]** use 500 V (the PS-23 rates the same position 500 V), or 150 µF 500 V. |
+| C3, C4 | 125 µF tab-mount (25-34) | LV half-wave doubler from the 125/95 VAC taps; C4 is also the pi-filter input | Same as C1/C2. |
+| C5 | 40 µF (25-36) | LV pi-filter output, with choke **L1 6 H** (46-22) | **[field]** 450 V. An open C5 causes a CW tone and relay chatter (HW-101-73). |
+| C6, C7 | **20 µF** (25-19) | Bias filter, with R7 | **Negative supply: the + lead goes to ground.** Rating not printed; **[field]** 160 V+. *(PS-23 and Latta's field list: 40 µF.)* |
+| R1–R4 | 100 kΩ 2 W (1-24-2) | HV bleeders / equalizers across C1, C2 | Drift high (field: ~150 kΩ). |
+| R5 | 100 kΩ 2 W | LV bleeder | — |
+| R7 | 1 kΩ 2 W (1-15-2) | Bias filter series | Chart: no bias → D7, R7, R8 or R9. |
+| R8, R10 | 10 kΩ 1 W (1-9-1) | Limit the BIAS ADJUST range | *(The PS-23's R8 is a 27 kΩ bias bleeder; the HP-23A has R8/R9/R10 instead.)* |
+| R9 | 10 kΩ tab-mount control (10-57) | BIAS ADJUST (pin 11 only) | Pin 11 resistance changes with its setting. |
+| D1–D7 | Silicon diode (57-27) | D1–D4 HV doubler; D5, D6 LV; D7 bias half-wave | Type not named in the HP-23A manual (field: 1N2071). **[field]** 1N4007. |
+| Breaker | 65-17 | Primary | Opens on reset → short in the transformer, rectifier/filter or load, or overload. |
+
+**Initial test (pp. 12–13).** Do this **before** the first power-on and before the equipment connector is fitted.
+
+1. Ohmmeter on R × 1: find the lead polarity. About **10 Ω** between terminal strip **J** lugs 3 (−) and 4 (+). Put the correct lead on socket **pin 7**.
+2. Switch to R × 10k. Expect:
+   - **pin 1 ≥ 22 kΩ**;
+   - **pins 3 and 4 ≥ 75 kΩ** (the needle creeps up as the caps charge);
+   - **pin 7 = 0 Ω**;
+   - **pin 11 = 10–20 kΩ**, varying with BIAS ADJUST;
+   - pins 2, 5, 6, 8, 9 and 10 infinite.
+
+**Troubleshooting chart (p. 15):**
+
+| Difficulty | Possible cause |
+|---------------------------|------------------------------------------------------------|
+| Completely dead | Breaker open, switch, pin 9/10 wiring, the equipment's remote switch, transformer |
+| Breaker opens when reset | Short in transformer windings, rectifier/filter, or the equipment; overload |
+| No HV | D1–D4; pin 4 wiring; transformer |
+| No LV | D5/D6 open; L1 open; pin 3 wiring; switch; diode or filter-cap polarity reversed |
+| No bias | D7 open; R7, R8 or R9 open; pin 1/11 wiring |
+| HV half with no load, lower under load | D1, D2, D3 or D4 open |
+| LV half | D5 or D6 open |
+| All outputs half | Primary wired for 240 V on a 120 V line |
+
+**Caution (p. 13).** The outputs are lethal, and the big capacitors keep their charge.
+
+- Let the bleeders discharge the caps. The manual allows shorting the cap lugs to chassis with a screwdriver blade; a **bleeder stick (resistor to ground)** is gentler.
+- Stand on dry insulating material and keep one hand behind your back.
+- **Never work on the supply with the line cord plugged in.**
+- The manual's voltages are no-load readings with an 11 MΩ VTVM (p. 14).
+
+### 3.6.2 PS-23 supply (checked against the PS-23 manual, 595-2314, ©1979)
 
 The PS-23 is the later (1979) kit supply in the HP-23 family. Page numbers are the PS-23 manual's printed pages.
 
@@ -345,7 +440,7 @@ The PS-23 is the later (1979) kit supply in the HP-23 family. Page numbers are t
 
 ## 4.2 Phase 1: HP-23
 
-Recap, test unloaded on a variac and wire per **Fig. 1-5 (p. 99)**. On a PS-23, confirm the **350 VDC wiring** and run its socket resistance check (§3.6.1).
+Recap, test unloaded on a variac and wire per **Fig. 1-5 (p. 99)**. On an HP-23A, set the switch **right (350 VDC)** and run its socket resistance check (§3.6.1). On a PS-23, confirm the **350 VDC wiring** and run its socket resistance check (§3.6.2).
 
 ## 4.3 Phase 2: Clean
 
@@ -565,6 +660,7 @@ Keep the original LMO power circuit unless PL1 or D907 cause repeated trouble.
 - K5BCQ SB-101/102 Repair Site; Nostalgic Kits Central SB-10x troubleshooting; W2PA SB-101 rebuild notes.
 - Heath list threads: "SB-102 LMO" (Jun 2002, K9STH); "SB-101 vs 102" (Oct 2009).
 - W8AOR SB-102 restoration kit parts list.
+- Heath, *Heathkit Assembly Manual, AC Power Supply Model HP-23A*, 595-924-01 (©1968).
 - Heath, *Heathkit Manual for the AC Power Supply Model PS-23*, 595-2314 (©1979).
 
 # 11. Rev. 2 change log (manual review)
@@ -586,4 +682,5 @@ Keep the original LMO power circuit unless PL1 or D907 cause repeated trouble.
 | Carrier null | Bulletin reference only | Manual's C18 12/24 pF rotor fix (p. 104). |
 | Troubleshooting | Bulletins only | Added the manual chart summary (§5.1). |
 | Dial error | "3–10 kHz between points is normal" | Spec is **within 400 Hz** after calibration; the K9STH figures describe aged or out-of-spec units. |
-| Supply (Rev. 2.1) | HP-23 recap bullets | Added §3.6.1, checked against the **PS-23 manual**: 350 VDC internal wiring for 300 V, fixed −130 V bias with no control, 2.92 A breaker, recap table with designators and ratings, pinout, initial resistance test, troubleshooting. |
+| Supply (Rev. 2.1) | HP-23 recap bullets | Added the PS-23 section (now §3.6.2), checked against the **PS-23 manual**: 350 VDC internal wiring for 300 V, fixed −130 V bias with no control, 2.92 A breaker, recap table with designators and ratings, pinout, initial resistance test, troubleshooting. |
+| Supply (Rev. 2.2) | HP-23 bullets from field sources | Added §3.6.1, checked against the **HP-23A manual** (595-924-01): the AC OFF switch is the B+ selector (right 350 VDC / left 275 VDC no-load = 300/250 V loaded; SB-102 uses **right**); fixed −130 V bias on pin 1 and adjustable −40 to −80 V on pin 11 (R9), which explains why the HP-23A BIAS control is inoperative with the SB-102; supply-end pinout (differs from the transceiver-end plug in §2.5); breaker, not fuse; recap table — **C6/C7 are 20 µF in the HP-23A** (40 µF in the PS-23), R8/R10 10 kΩ 1 W bias-range limiters; initial resistance test; troubleshooting chart. Capacitor voltage ratings and the breaker rating are not printed in the HP-23A manual. |
