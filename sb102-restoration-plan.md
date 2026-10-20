@@ -24,6 +24,7 @@ toc: true
 | Nostalgic Kits Central SB-10x troubleshooting | nostalgickitscentral.com | Measured SB-102 resistor drift and electrolytic leakage. |
 | W2PA SB-101 rebuild notes | sites.google.com/site/radiow2pa | LMO connector, bandswitch rotors, driver neutralizing. |
 | Heath list / Heathkit-Radios / heathkit (groups.io) | puck.nether.net, groups.io | Field experience. |
+| **PS-23 AC Power Supply manual** 595-2314 (©1979) | Supplied by owner | Supply section checked against it (Rev. 2.1). |
 
 **Designator groups (p. 135):**
 
@@ -254,6 +255,74 @@ Do not open the LMO casually. If it is defective, the manual says to return it (
 - Must meet the spec: **700–850 V @ 250 mA, 300 V @ 150 mA, −115 V @ 10 mA, 12 V @ 4.76 A**.
 - Reform or ramp on a variac over 5–10 min.
 
+### 3.6.1 PS-23 supply (checked against the PS-23 manual, 595-2314, ©1979)
+
+The PS-23 is the later (1979) kit supply in the HP-23 family. Page numbers are the PS-23 manual's printed pages.
+
+**How the PS-23 differs from the HP-23/HP-23A:**
+
+- **There is no front-panel B+ switch.** The low-voltage tap is chosen by an internal jumper at assembly: **350 VDC wiring** (Detail 5B, p. 10) or **275 VDC wiring** (Detail 5C, p. 11). On the schematic (illustration booklet p. 4) the brown transformer lead feeds 350 VDC and the brown-yellow lead feeds 275 VDC.
+- **There is no bias control.** The PS-23 gives a fixed **−130 V** with no load (−100 V at 20 mA); bias is set on the transceiver.
+- **A 2.92 A circuit breaker** (65-17) replaces the fuse. Primary current goes through the breaker and through pins 9–10, the AC switch in the equipment (p. 21).
+- A **3-wire grounded line cord** is standard; the green wire goes to chassis lug F (p. 13).
+- The output cable is a captive 8-wire cable with an 11-pin plug. The connector for the far end comes with the equipment (p. 17).
+
+**SB-102: LV tap.** Needs **300 V @ 150 mA**, so the PS-23 must have the **350 VDC wiring** (Detail 5B). The SB-102 initial test expects 800–900 V on HV, matching the PS-23's 820 V no-load figure.
+
+**Specifications (p. 20):**
+
+| Output | No load | Loaded | Duty |
+|---|---|---|---|
+| HV | 820 V | 700 V @ 250 mA (62.5 µF effective; < 1% ripple) | Continuous to 150 mA; 50% at 300 mA |
+| LV high tap (350 VDC wiring) | 350 V | 300 V @ 150 mA (with 100 mA on HV) | Continuous to 175 mA |
+| LV low tap (275 VDC wiring) | 275 V | 250 V @ 100 mA (with 100 mA on HV) | Continuous to 175 mA |
+| Fixed bias | −130 V | −100 V @ 20 mA | — |
+| Filament | — | 12.6 VAC @ 5.5 A | — |
+| Line | 120/240 VAC, 50/60 Hz, 350 W | | |
+
+**Output pinout (schematic; Table 1, p. 17; Detail 7F, p. 14):**
+
+| Pin | Cable wire | Function |
+|---|---|---|
+| 1 | Green | −130 V fixed bias |
+| 2 | Black | Filament common |
+| 3 | Orange | LV +350 V or +275 V (no load) |
+| 4 | Yellow | HV +820 V (no load) |
+| 6 | Red | 12.6 VAC filament |
+| 7 | White | Ground |
+| 9, 10 | Brown, blue | AC switch loop in the equipment. If the equipment has no AC switching, jumper pins 9–10 at the plug and leave brown and blue unconnected (p. 14). |
+| 5, 8, 11 | — | No connection |
+
+**Recap list, with the PS-23 manual's values (parts list p. 3; schematic; circuit description p. 21):**
+
+| Ref | Manual value | Function | Notes |
+|---|---|---|---|
+| C1, C2 | 125 µF 500 V (25-265 can) | HV voltage doubler | Replace both together; field practice is 150 µF 500 V. |
+| C3, C4 | 125 µF 500 V (25-265 can) | LV half-wave doubler; C4 is also the pi-filter input | Same type of can as C1/C2. |
+| C5 | 40 µF 450 V (25-36) | LV pi-filter output (with choke L1, 6 H) | An open C5 causes a CW tone and relay chatter (HW-101-73). |
+| C6, C7 | 40 µF 150 V (25-20) | Bias filter | **Negative supply: the + lead goes to the ground lug** (p. 12). |
+| R1–R4 | 100 kΩ 2 W | HV bleeders / equalizers across C1, C2 | Drift high (field: ~150 kΩ); metal film 2 W. |
+| R5 | 100 kΩ 2 W | LV bleeder | — |
+| R7 | 1000 Ω 2 W | Bias filter series | Chart: no bias → D7, R7 or R8. |
+| R8 | 27 kΩ 1 W | Bias bleeder | Field practice uprates to 2 W. |
+| D1–D7 | 1N2071 (57-27) | D1–D4 HV doubler (two per leg); D5, D6 LV; D7 bias | 1N4007 is the usual replacement. |
+| L1 | 46-56, 6 H | LV filter choke | Chart: no LV → D5/D6, L1. |
+| Breaker | 2.92 A (65-17) | Primary protection | Opens on reset → transformer, rectifier/filter or load short. |
+
+**Initial test (p. 15).** Use a VTVM or VOM; a solid-state ohmmeter won't turn the diodes on.
+
+- Find the meter polarity on R × 1 (about 10 Ω between strip H lugs 3 and 4). Put the correct lead on ground and switch to R × 10k.
+- Socket readings: **pin 1 ≥ 22 kΩ; pins 3 and 4 ≥ 75 kΩ** (they rise slowly as the caps charge); **pin 7 = 0 Ω**; all others infinite.
+
+**Troubleshooting shortcuts (p. 19):**
+
+- **HV only half the normal value** → D1–D4 or C1/C2.
+- **LV only half** → D5/D6.
+- **All outputs half** → primary wired for 240 V on a 120 V line.
+- **Dead** → breaker, the pins 9–10 loop, or the equipment's switch.
+
+**Caution (p. 17).** The outputs are lethal and the large capacitors hold their charge. The manual allows shorting the cap lugs to chassis with a screwdriver blade. A **bleeder stick (resistor to ground)** is gentler on the caps and terminals. Work with one hand, on an insulating surface.
+
 # 4. Restoration plan
 
 ## 4.1 Phase 0: Assess cold
@@ -276,7 +345,7 @@ Do not open the LMO casually. If it is defective, the manual says to return it (
 
 ## 4.2 Phase 1: HP-23
 
-Recap, test unloaded on a variac and wire per **Fig. 1-5 (p. 99)**.
+Recap, test unloaded on a variac and wire per **Fig. 1-5 (p. 99)**. On a PS-23, confirm the **350 VDC wiring** and run its socket resistance check (§3.6.1).
 
 ## 4.3 Phase 2: Clean
 
@@ -496,6 +565,7 @@ Keep the original LMO power circuit unless PL1 or D907 cause repeated trouble.
 - K5BCQ SB-101/102 Repair Site; Nostalgic Kits Central SB-10x troubleshooting; W2PA SB-101 rebuild notes.
 - Heath list threads: "SB-102 LMO" (Jun 2002, K9STH); "SB-101 vs 102" (Oct 2009).
 - W8AOR SB-102 restoration kit parts list.
+- Heath, *Heathkit Manual for the AC Power Supply Model PS-23*, 595-2314 (©1979).
 
 # 11. Rev. 2 change log (manual review)
 
@@ -516,3 +586,4 @@ Keep the original LMO power circuit unless PL1 or D907 cause repeated trouble.
 | Carrier null | Bulletin reference only | Manual's C18 12/24 pF rotor fix (p. 104). |
 | Troubleshooting | Bulletins only | Added the manual chart summary (§5.1). |
 | Dial error | "3–10 kHz between points is normal" | Spec is **within 400 Hz** after calibration; the K9STH figures describe aged or out-of-spec units. |
+| Supply (Rev. 2.1) | HP-23 recap bullets | Added §3.6.1, checked against the **PS-23 manual**: 350 VDC internal wiring for 300 V, fixed −130 V bias with no control, 2.92 A breaker, recap table with designators and ratings, pinout, initial resistance test, troubleshooting. |
